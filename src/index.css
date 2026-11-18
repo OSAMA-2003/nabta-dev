@@ -340,6 +340,42 @@ form {
   font-size: 11px;
 }
 
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px 0 8px;
+  font-size: 11px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #6e7771;
+}
+
+.remember-me input {
+  width: 13px;
+  height: 13px;
+  accent-color: #236347;
+}
+
+.login-options a {
+  color: #236347;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.text-link {
+  border: 0;
+  padding: 0;
+  color: #236347;
+  background: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .success-message {
   min-height: 430px;
   display: flex;
