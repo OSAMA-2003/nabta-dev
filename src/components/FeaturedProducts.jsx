@@ -11,14 +11,25 @@ import {
   Warehouse, 
   Sparkles, 
   ArrowLeft,
-  Plus
+  Plus,
+  Zap,
+  CheckCircle2,
+  Wrench
 } from 'lucide-react';
 
-function ProductCard({ item, inWish, toggleWishlist, addToCart, navigate }) {
+function ProductCard({ 
+  item, 
+  inWish, 
+  isAdded, 
+  toggleWishlist, 
+  onAddToCart, 
+  onBuyNow, 
+  navigate 
+}) {
   return (
     <motion.div
       whileHover={{ y: -6, transition: { duration: 0.25 } }}
-      className="bg-white border border-gray-100 hover:border-[#a3f69c] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col group relative"
+      className="bg-white border border-gray-100 hover:border-[#a3f69c] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group relative"
     >
       {/* Product Badge */}
       <div className="absolute top-3 right-3 z-10 flex flex-col gap-1 items-end pointer-events-none">
@@ -32,7 +43,7 @@ function ProductCard({ item, inWish, toggleWishlist, addToCart, navigate }) {
         )}
       </div>
 
-      {/* Wishlist Button */}
+      {/* Wishlist Button - Green when active */}
       <motion.button
         type="button"
         whileTap={{ scale: 0.85 }}
@@ -41,25 +52,25 @@ function ProductCard({ item, inWish, toggleWishlist, addToCart, navigate }) {
           e.stopPropagation();
           toggleWishlist(item.id);
         }}
-        className={`absolute top-3 left-3 z-10 p-2 rounded-full backdrop-blur-md transition-colors cursor-pointer ${
+        className={`absolute top-3 left-3 z-10 p-2 rounded-full backdrop-blur-md transition-all cursor-pointer ${
           inWish
-            ? 'bg-red-50 text-red-600 shadow-sm'
-            : 'bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 shadow-xs'
+            ? 'bg-emerald-50 text-emerald-600 border border-emerald-300 shadow-sm'
+            : 'bg-white/80 hover:bg-white text-gray-400 hover:text-emerald-500 shadow-xs'
         }`}
-        aria-label="إضافة للمفضلة"
+        aria-label={inWish ? "إزالة من المفضلة" : "إضافة للمفضلة"}
       >
-        <Heart className={`w-4 h-4 ${inWish ? 'fill-current text-red-600' : ''}`} />
+        <Heart className={`w-4 h-4 ${inWish ? 'fill-emerald-600 text-emerald-600' : 'text-gray-400'}`} />
       </motion.button>
 
       {/* Product Image */}
       <div
         onClick={() => navigate('product-details', item)}
-        className="w-full h-52 overflow-hidden bg-gray-50 cursor-pointer relative"
+        className="w-full h-52 overflow-hidden bg-gray-50 cursor-pointer relative p-3 flex items-center justify-center"
       >
         <img
           src={item.image}
           alt={item.name}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
         />
       </div>
 
@@ -90,8 +101,8 @@ function ProductCard({ item, inWish, toggleWishlist, addToCart, navigate }) {
           </p>
         </div>
 
-        {/* Price and Add to Cart */}
-        <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+        {/* Price and Action Buttons */}
+        <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-black text-[#00351a]">
@@ -106,16 +117,48 @@ function ProductCard({ item, inWish, toggleWishlist, addToCart, navigate }) {
             )}
           </div>
 
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => addToCart(item, 1)}
-            className="bg-[#0e4d2b] hover:bg-[#00351a] text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-sm hover:shadow transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
-          >
-            <span>أضف للسلة</span>
-            <Plus className="w-3.5 h-3.5" />
-          </motion.button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {isAdded ? (
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('cart');
+                }}
+                className="bg-[#1b6d24] text-white text-[11px] font-bold px-3 py-2 rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer ring-2 ring-[#a3f69c]"
+                title="انتقل للسلة لتأكيد الطلب"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#a3f69c] animate-pulse" />
+                <span>تأكيد الطلب</span>
+              </motion.button>
+            ) : (
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={(e) => onAddToCart(e, item)}
+                className="bg-[#0e4d2b] hover:bg-[#00351a] text-white text-[11px] font-bold px-2.5 py-2 rounded-xl shadow-xs hover:shadow transition-colors flex items-center gap-1 cursor-pointer"
+                title="أضف إلى السلة"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>أضف للسلة</span>
+              </motion.button>
+            )}
+
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={(e) => onBuyNow(e, item)}
+              className="bg-[#a3f69c] hover:bg-[#85e87d] text-[#00351a] text-[11px] font-bold px-2.5 py-2 rounded-xl shadow-xs hover:shadow transition-colors flex items-center gap-1 cursor-pointer"
+              title="شراء فوري والانتقال لصفحة تأكيد الشراء"
+            >
+              <Zap className="w-3.5 h-3.5 fill-[#00351a]" />
+              <span>اشتري فوراً</span>
+            </motion.button>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -125,6 +168,22 @@ function ProductCard({ item, inWish, toggleWishlist, addToCart, navigate }) {
 export default function FeaturedProducts() {
   const { addToCart, toggleWishlist, isInWishlist, navigate } = useCart();
   const [activeTab, setActiveTab] = useState('all');
+  const [addedItems, setAddedItems] = useState({});
+
+  const handleAddToCart = (e, item) => {
+    e.stopPropagation();
+    addToCart(item, 1);
+    setAddedItems(prev => ({ ...prev, [item.id]: true }));
+    setTimeout(() => {
+      setAddedItems(prev => ({ ...prev, [item.id]: false }));
+    }, 2500);
+  };
+
+  const handleBuyNow = (e, item) => {
+    e.stopPropagation();
+    addToCart(item, 1);
+    navigate('checkout');
+  };
 
   // Filter tabs definition
   const offerTabs = [
@@ -134,6 +193,7 @@ export default function FeaturedProducts() {
     { id: 'seeds', name: 'بذور وتقاوي', icon: Wheat },
     { id: 'protection', name: 'مبيدات ووقاية', icon: ShieldCheck },
     { id: 'greenhouses', name: 'بيوت محمية', icon: Warehouse },
+    { id: 'services', name: 'خدمات واستشارات', icon: Wrench },
   ];
 
   // Grouped category sections when "all" is active
@@ -153,6 +213,14 @@ export default function FeaturedProducts() {
       icon: FlaskConical,
       tag: 'تسميد وتحجيم متوازن',
       items: products.filter(p => p.category === 'fertilizers').slice(0, 4)
+    },
+    {
+      id: 'services',
+      title: 'قسم الخدمات والاستشارات الزراعية والهندسية',
+      subtitle: 'شبكات ري حديثة، تأجير معدات ثقيلة، والتواصل المباشر مع استشاري زراعي',
+      icon: Wrench,
+      tag: 'تنفيذ واستشارات ميدانية',
+      items: products.filter(p => p.category === 'services')
     },
     {
       id: 'seeds',
@@ -186,7 +254,7 @@ export default function FeaturedProducts() {
             أحدث المنتجات الزراعية والعروض التخصصية
           </h2>
           <p className="text-[#404941] text-xs sm:text-sm mt-1">
-            منتجات مختبرة ومعتمدة مرتبة بحسب الأقسام الزراعية لتسهيل اختيار مستلزمات مزرعتك
+            منتجات مختبرة وخدمات هندسية مرتبة بحسب الأقسام الزراعية لتسهيل تلبية احتياجات مزرعتك
           </p>
         </div>
 
@@ -195,7 +263,7 @@ export default function FeaturedProducts() {
           onClick={() => navigate('catalog')}
           className="text-[#00351a] hover:text-[#0e4d2b] font-bold text-sm flex items-center gap-1.5 transition-colors self-end sm:self-auto cursor-pointer"
         >
-          <span>عرض كافة المنتجات في الكتالوج</span>
+          <span>عرض كافة المنتجات والخدمات في الكتالوج</span>
           <ArrowLeft className="w-4 h-4" />
         </button>
       </div>
@@ -286,8 +354,10 @@ export default function FeaturedProducts() {
                         key={item.id}
                         item={item}
                         inWish={isInWishlist(item.id)}
+                        isAdded={Boolean(addedItems[item.id])}
                         toggleWishlist={toggleWishlist}
-                        addToCart={addToCart}
+                        onAddToCart={handleAddToCart}
+                        onBuyNow={handleBuyNow}
                         navigate={navigate}
                       />
                     ))}
@@ -325,8 +395,10 @@ export default function FeaturedProducts() {
                     key={item.id}
                     item={item}
                     inWish={isInWishlist(item.id)}
+                    isAdded={Boolean(addedItems[item.id])}
                     toggleWishlist={toggleWishlist}
-                    addToCart={addToCart}
+                    onAddToCart={handleAddToCart}
+                    onBuyNow={handleBuyNow}
                     navigate={navigate}
                   />
                 ))}

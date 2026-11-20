@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X } from 'lucide-react';
-import { WHATSAPP_DISPLAY_PHONE, createWhatsAppUrl } from '../utils/whatsapp';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { MessageCircle } from 'lucide-react';
+import { createWhatsAppUrl } from '../utils/whatsapp';
 
 export default function FloatingWhatsApp() {
-  const [showBubble, setShowBubble] = useState(true);
-
   const defaultMessage = 'السلام عليكم، أود الاستفسار عن منتجات وتوريدات متجر نبته الزراعي في مصر.';
   const whatsappUrl = createWhatsAppUrl(defaultMessage);
 
@@ -14,8 +12,6 @@ export default function FloatingWhatsApp() {
       aria-label="خدمة عملاء واتساب"
       className="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-2 select-none"
     >
-     
-
       {/* Main WhatsApp Button with subtle floating animation */}
       <motion.a
         href={whatsappUrl}
@@ -34,7 +30,7 @@ export default function FloatingWhatsApp() {
         </span>
         <MessageCircle className="w-6 h-6 fill-current text-white" />
         <span className="font-bold text-xs hidden md:inline">
-          طلب واستشارة واتساب
+          طلب واستشارة واتساب 
         </span>
       </motion.a>
     </aside>

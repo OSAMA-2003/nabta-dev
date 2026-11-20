@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CartProvider, useCart } from './context/CartContext';
-import TopAnnouncementBar from './components/TopAnnouncementBar';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import CategoryPills from './components/CategoryPills';
@@ -22,6 +21,8 @@ import CheckoutView from './views/CheckoutView';
 import OrderConfirmationView from './views/OrderConfirmationView';
 import OrdersView from './views/OrdersView';
 import ProfileView from './views/ProfileView';
+import WishlistView from './views/WishlistView';
+import LoginView from './views/LoginView';
 
 function MainAppContent() {
   const { currentView } = useCart();
@@ -30,7 +31,6 @@ function MainAppContent() {
     <div className="min-h-screen bg-[#fafdfa] flex flex-col font-sans text-[#404941]" dir="rtl">
       {/* Top Header */}
       <header className="w-full shrink-0">
-        <TopAnnouncementBar />
         <Navbar />
       </header>
 
@@ -63,6 +63,8 @@ function MainAppContent() {
             {currentView === 'order-confirmation' && <OrderConfirmationView />}
             {currentView === 'orders' && <OrdersView />}
             {currentView === 'profile' && <ProfileView />}
+            {currentView === 'wishlist' && <WishlistView />}
+            {currentView === 'login' && <LoginView />}
           </motion.div>
         </AnimatePresence>
       </main>

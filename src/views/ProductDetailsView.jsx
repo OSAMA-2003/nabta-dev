@@ -2,14 +2,32 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { products } from '../data';
-import iconHeart from '../assets/icon-heart.svg';
-import { Truck, Microscope, Star, Plus, Minus, MessageCircle } from 'lucide-react';
+import { 
+  Truck, 
+  Microscope, 
+  Star, 
+  Plus, 
+  Minus, 
+  MessageCircle,
+  Heart,
+  Zap,
+  CheckCircle2
+} from 'lucide-react';
 import { WHATSAPP_PHONE } from '../utils/whatsapp';
 
 export default function ProductDetailsView() {
   const { selectedProduct, addToCart, toggleWishlist, isInWishlist, navigate } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('specs'); // 'specs' | 'usage' | 'reviews'
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart(selectedProduct, quantity);
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2500);
+  };
 
   if (!selectedProduct) {
     return (
@@ -80,16 +98,21 @@ export default function ProductDetailsView() {
                 {selectedProduct.origin}
               </span>
             </div>
-            {/* Wishlist button */}
-            <button
+            {/* Wishlist button - Green when active */}
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => toggleWishlist(selectedProduct.id)}
               className={`absolute top-4 left-4 p-2.5 rounded-full backdrop-blur-md shadow-sm transition-all cursor-pointer ${
-                inWish ? 'bg-red-50 text-[#ba1a1a]' : 'bg-white/80 hover:bg-white text-gray-600'
+                inWish
+                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-300 shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-gray-400 hover:text-emerald-500'
               }`}
-              aria-label="إضافة للمفضلة"
+              aria-label={inWish ? "إزالة من المفضلة" : "إضافة للمفضلة"}
             >
-              <img src={iconHeart} alt="" className={`w-5 h-5 ${inWish ? 'filter invert-[18%] sepia-[86%] saturate-[5000%] hue-rotate-[340deg]' : ''}`} />
-            </button>
+              <Heart className={`w-5 h-5 ${inWish ? 'fill-emerald-600 text-emerald-600' : 'text-gray-400'}`} />
+            </motion.button>
           </div>
 
           {/* Quick Trust Badges */}
@@ -200,25 +223,39 @@ export default function ProductDetailsView() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => addToCart(selectedProduct, quantity)}
-                className="flex-1 bg-[#00351a] hover:bg-[#0e4d2b] text-white font-bold text-sm py-3.5 px-6 rounded-full shadow-md hover:shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>أضف إلى سلة التسوق</span>
-                <Plus className="w-4 h-4" />
-              </motion.button>
+              {isAdded ? (
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate('cart')}
+                  className="flex-1 bg-[#1b6d24] text-white font-bold text-sm py-3.5 px-6 rounded-full shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer ring-2 ring-[#a3f69c]"
+                >
+                  <CheckCircle2 className="w-5 h-5 text-[#a3f69c] animate-pulse" />
+                  <span>تمت الإضافة - تأكيد الطلب</span>
+                </motion.button>
+              ) : (
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-[#00351a] hover:bg-[#0e4d2b] text-white font-bold text-sm py-3.5 px-6 rounded-full shadow-md hover:shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>أضف إلى سلة التسوق</span>
+                  <Plus className="w-4 h-4" />
+                </motion.button>
+              )}
 
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleBuyNow}
-                className="bg-[#a0f399] hover:bg-[#8ee687] text-[#00351a] font-bold text-sm py-3.5 px-8 rounded-full shadow-md transition-colors cursor-pointer"
+                className="bg-[#a0f399] hover:bg-[#8ee687] text-[#00351a] font-bold text-sm py-3.5 px-8 rounded-full shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
-                شراء فوري ومتابعة الدفع
+                <Zap className="w-4 h-4 fill-[#00351a]" />
+                <span>شراء فوري ومتابعة الدفع</span>
               </motion.button>
 
               <motion.a

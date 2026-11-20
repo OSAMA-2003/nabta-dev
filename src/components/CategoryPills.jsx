@@ -7,10 +7,9 @@ import {
   FlaskConical, 
   Wheat, 
   ShieldCheck, 
-  Droplets, 
   Warehouse, 
-  Tractor,
-  Trees 
+  Trees,
+  Wrench 
 } from 'lucide-react';
 
 const iconMap = {
@@ -18,10 +17,9 @@ const iconMap = {
   FlaskConical,
   Wheat,
   ShieldCheck,
-  Droplets,
   Warehouse,
-  Tractor,
-  Trees
+  Trees,
+  Wrench
 };
 
 const containerVariants = {
@@ -73,7 +71,7 @@ export default function CategoryPills() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-40px' }}
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4"
       >
         {categories.filter(c => c.id !== 'all').map((cat) => {
           const IconComponent = iconMap[cat.icon] || Sprout;

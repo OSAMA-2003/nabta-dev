@@ -1,7 +1,8 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import logo from '../assets/logo.png';
-import { PhoneCall } from 'lucide-react';
+import { Truck, Phone, Store, PhoneCall } from 'lucide-react';
+import { DISPLAY_PHONE, WHATSAPP_PHONE } from '../utils/whatsapp';
 
 const CURRENT_YEAR = 2026;
 
@@ -10,6 +11,53 @@ export default function Footer() {
 
   return (
     <footer className="bg-white border-t border-gray-200 mt-16" data-node-id="104:8850">
+      {/* Top Announcement Bar moved to Footer */}
+      <div className="bg-[#0e4d2b] text-white py-3.5 px-4 sm:px-6 lg:px-8 border-b border-emerald-900 shadow-inner">
+        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
+          {/* Delivery promise */}
+          <div className="flex items-center gap-2.5 text-center md:text-right">
+            <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+              <Truck className="w-4 h-4 text-[#a3f69c]" />
+            </div>
+            <p className="leading-tight">
+              <span className="font-semibold text-white">توصيل مباشر لكافة المزارع والمشاريع في مصر</span>
+              <span className="text-emerald-300 mx-2 hidden sm:inline">|</span>
+              <span className="text-emerald-100 block sm:inline">شحن مجاني للطلبات فوق 1500 ج.م</span>
+            </p>
+          </div>
+
+          {/* WhatsApp Support & Supplier Join */}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            <a 
+              href={`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent('مرحباً نبتة، أرغب بالاستفسار عن المستلزمات الزراعية المتاحة للشحن للمزرعة.')}`} 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-[#a3f69c] transition-colors group"
+            >
+              <div className="w-7 h-7 rounded-full bg-emerald-800 flex items-center justify-center group-hover:bg-emerald-700 transition-colors shrink-0">
+                <Phone className="w-3.5 h-3.5 text-[#a3f69c]" />
+              </div>
+              <div className="text-right">
+                <span className="text-[11px] text-emerald-200 block">استشارات وطلب عبر الواتساب:</span>
+                <span className="font-bold text-[#a3f69c] tracking-wider" dir="ltr">{DISPLAY_PHONE}</span>
+              </div>
+            </a>
+
+            <span className="h-5 w-px bg-white/20 hidden sm:inline-block" />
+
+            <a
+              href={`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent('مرحباً نبتة، أرغب بالانضمام كمورد أو مصنع معتمد لدى المنصة.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#00351a] hover:bg-[#022814] text-[#a3f69c] border border-emerald-700/60 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm"
+            >
+              <Store className="w-3.5 h-3.5 shrink-0" />
+              <span>انضم كمورد معتمد</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-gray-100">
           
@@ -51,13 +99,18 @@ export default function Footer() {
                 </button>
               </li>
               <li>
-                <button onClick={() => navigate('catalog', 'irrigation')} className="hover:text-[#0e4d2b] transition-colors cursor-pointer">
-                  شبكات وأنظمة ري
+                <button onClick={() => navigate('catalog', 'trees')} className="hover:text-[#0e4d2b] transition-colors cursor-pointer">
+                  أشجار وشتلات مثمرة
                 </button>
               </li>
               <li>
-                <button onClick={() => navigate('catalog', 'tools')} className="hover:text-[#0e4d2b] transition-colors cursor-pointer">
-                  معدات وأدوات حقلية
+                <button onClick={() => navigate('catalog', 'services')} className="hover:text-[#0e4d2b] transition-colors cursor-pointer">
+                  خدمات واستشارات زراعية
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('catalog', 'greenhouses')} className="hover:text-[#0e4d2b] transition-colors cursor-pointer">
+                  بيوت محمية ومستلزمات
                 </button>
               </li>
             </ul>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { Sprout, UserCheck, Check, Plus } from 'lucide-react';
+import { Sprout, UserCheck, Check, Plus, Heart, LogOut, Edit3 } from 'lucide-react';
 
 export default function ProfileView() {
-  const { user, orders, navigate } = useCart();
+  const { user, orders, wishlist, logoutUser, navigate } = useCart();
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8" data-node-id="159:881">
@@ -46,17 +46,58 @@ export default function ProfileView() {
               <span className="font-semibold text-[#00351a]">{user.region}</span>
             </div>
             <div className="flex justify-between">
+              <span className="text-gray-400">مساحة الحيازة:</span>
+              <span className="font-semibold text-[#1b6d24]">{user.areaFeddan || '50'} فدان</span>
+            </div>
+            <div className="flex justify-between">
               <span className="text-gray-400">عدد الشحنات المنفذة:</span>
               <span className="font-bold text-[#1b6d24]">{orders.length} طلبات</span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">الأصناف المفضلة:</span>
+              <span className="font-bold text-emerald-700">{wishlist.length} صنف</span>
+            </div>
           </div>
 
-          <button
-            onClick={() => navigate('orders')}
-            className="w-full mt-6 bg-[#00351a] hover:bg-[#0e4d2b] text-white text-xs font-bold py-3 rounded-xl transition-all cursor-pointer"
-          >
-            عرض سجل الطلبات والتتبع
-          </button>
+          <div className="space-y-2.5 mt-6">
+            <button
+              onClick={() => navigate('orders')}
+              className="w-full bg-[#00351a] hover:bg-[#0e4d2b] text-white text-xs font-bold py-3 rounded-xl transition-all cursor-pointer shadow-sm"
+            >
+              عرض سجل الطلبات والتتبع
+            </button>
+
+            <button
+              onClick={() => navigate('wishlist')}
+              className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold py-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <Heart className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600" />
+              <span>قائمتي المفضلة ({wishlist.length})</span>
+            </button>
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                onClick={() => navigate('login')}
+                className="bg-gray-100 hover:bg-gray-200 text-[#404941] text-xs font-bold py-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1"
+                title="تعديل بيانات الحساب المحفوظة"
+              >
+                <Edit3 className="w-3 h-3" />
+                <span>تعديل الحساب</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  logoutUser();
+                  navigate('home');
+                }}
+                className="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold py-2 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1"
+                title="تسجيل الخروج ومسح الجلسة"
+              >
+                <LogOut className="w-3 h-3" />
+                <span>خروج</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Registered Farms & Agronomist Support (Cols 8) */}

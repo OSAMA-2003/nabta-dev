@@ -2,18 +2,19 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { products, categories } from '../data';
-import iconHeart from '../assets/icon-heart.svg';
 import { 
   X, 
   ShieldCheck, 
   Wheat, 
   Sprout, 
   FlaskConical, 
-  Droplets, 
   Warehouse, 
-  Tractor,
   Trees,
-  Plus
+  Wrench,
+  Plus,
+  Heart,
+  Zap,
+  CheckCircle2
 } from 'lucide-react';
 
 const categoryIconMap = {
@@ -21,10 +22,9 @@ const categoryIconMap = {
   FlaskConical,
   Wheat,
   ShieldCheck,
-  Droplets,
   Warehouse,
-  Tractor,
-  Trees
+  Trees,
+  Wrench
 };
 
 export default function CatalogView() {
@@ -40,9 +40,24 @@ export default function CatalogView() {
   } = useCart();
 
   const [sortBy, setSortBy] = useState('recommended');
-  const [maxPrice, setMaxPrice] = useState(1000);
+  const [addedItems, setAddedItems] = useState({});
 
-  // Filter products
+  const handleAddToCart = (e, item) => {
+    e.stopPropagation();
+    addToCart(item, 1);
+    setAddedItems(prev => ({ ...prev, [item.id]: true }));
+    setTimeout(() => {
+      setAddedItems(prev => ({ ...prev, [item.id]: false }));
+    }, 2500);
+  };
+
+  const handleBuyNow = (e, item) => {
+    e.stopPropagation();
+    addToCart(item, 1);
+    navigate('checkout');
+  };
+
+  // Filter products without price limit restriction
   const filteredProducts = useMemo(() => {
     return products.filter((item) => {
       // Category filter
@@ -57,10 +72,6 @@ export default function CatalogView() {
         const matchesTags = item.tags.some(t => t.toLowerCase().includes(query));
         if (!matchesName && !matchesDesc && !matchesTags) return false;
       }
-      // Price filter
-      if (item.price > maxPrice) {
-        return false;
-      }
       return true;
     }).sort((a, b) => {
       if (sortBy === 'price-low') return a.price - b.price;
@@ -68,7 +79,7 @@ export default function CatalogView() {
       if (sortBy === 'rating') return b.rating - a.rating;
       return 0; // recommended default
     });
-  }, [selectedCategoryFilter, searchQuery, maxPrice, sortBy]);
+  }, [selectedCategoryFilter, searchQuery, sortBy]);
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8" data-node-id="105:10234">
@@ -170,31 +181,6 @@ export default function CatalogView() {
             </div>
           </div>
 
-          {/* Max Price Filter Slider */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-sm text-[#00351a]">
-                السقف السعري
-              </h3>
-              <span className="text-xs font-bold text-[#0e4d2b]">
-                حتى {maxPrice} ج.م
-              </span>
-            </div>
-            <input
-              type="range"
-              min="50"
-              max="1500"
-              step="25"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full accent-[#00351a] cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] text-gray-400 mt-1">
-              <span>50 ج.م</span>
-              <span>1500 ج.م</span>
-            </div>
-          </div>
-
           {/* Certified Quality Guarantee Badge in Sidebar */}
           <div className="bg-[#eff8f2] border border-[#a3f69c]/60 p-4 rounded-xl text-right">
             <div className="flex items-center gap-2 mb-1.5 text-[#00351a]">
@@ -254,7 +240,7 @@ export default function CatalogView() {
                         </span>
                       </div>
 
-                      {/* Wishlist Button */}
+                      {/* Wishlist Button - Green when active */}
                       <motion.button
                         type="button"
                         whileHover={{ scale: 1.1 }}
@@ -263,14 +249,14 @@ export default function CatalogView() {
                           e.stopPropagation();
                           toggleWishlist(item.id);
                         }}
-                        className={`absolute top-3 left-3 z-10 p-2 rounded-full backdrop-blur-md transition-colors cursor-pointer ${
+                        className={`absolute top-3 left-3 z-10 p-2 rounded-full backdrop-blur-md transition-all cursor-pointer ${
                           inWish
-                            ? 'bg-red-50 text-[#ba1a1a]'
-                            : 'bg-white/80 hover:bg-white text-gray-500 hover:text-red-500'
+                            ? 'bg-emerald-50 text-emerald-600 border border-emerald-300 shadow-sm'
+                            : 'bg-white/80 hover:bg-white text-gray-400 hover:text-emerald-600 shadow-xs'
                         }`}
-                        aria-label="إضافة للمفضلة"
+                        aria-label={inWish ? "إزالة من المفضلة" : "إضافة للمفضلة"}
                       >
-                        <img src={iconHeart} alt="" className={`w-4 h-4 ${inWish ? 'filter invert-[18%] sepia-[86%] saturate-[5000%] hue-rotate-[340deg]' : ''}`} />
+                        <Heart className={`w-4 h-4 ${inWish ? 'fill-emerald-600 text-emerald-600' : 'text-gray-400'}`} />
                       </motion.button>
 
                       {/* Image Area */}
@@ -305,7 +291,7 @@ export default function CatalogView() {
                           </p>
                         </div>
 
-                        <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+                        <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2">
                           <div>
                             <div className="flex items-baseline gap-1">
                               <span className="text-base font-black text-[#00351a]">
@@ -320,16 +306,49 @@ export default function CatalogView() {
                             )}
                           </div>
 
-                          <motion.button
-                            type="button"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => addToCart(item, 1)}
-                            className="bg-[#0e4d2b] hover:bg-[#00351a] text-white text-xs font-bold px-3 py-2 rounded-xl shadow-xs hover:shadow transition-colors flex items-center gap-1 cursor-pointer"
-                          >
-                            <span>أضف للسلة</span>
-                            <Plus className="w-3.5 h-3.5" />
-                          </motion.button>
+                          {/* Action Buttons: Add to Cart (with Check Confirmation) + Buy Now */}
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {addedItems[item.id] ? (
+                              <motion.button
+                                type="button"
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate('cart');
+                                }}
+                                className="bg-[#1b6d24] text-white text-[11px] font-bold px-3 py-2 rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer ring-2 ring-[#a3f69c]"
+                                title="انتقل إلى السلة لتأكيد الطلب"
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5 text-[#a3f69c] animate-pulse" />
+                                <span>تأكيد الطلب</span>
+                              </motion.button>
+                            ) : (
+                              <motion.button
+                                type="button"
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={(e) => handleAddToCart(e, item)}
+                                className="bg-[#0e4d2b] hover:bg-[#00351a] text-white text-[11px] font-bold px-2.5 py-2 rounded-xl shadow-xs hover:shadow transition-colors flex items-center gap-1 cursor-pointer"
+                                title="أضف إلى السلة"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                                <span>أضف للسلة</span>
+                              </motion.button>
+                            )}
+
+                            <motion.button
+                              type="button"
+                              whileHover={{ scale: 1.03 }}
+                              whileTap={{ scale: 0.97 }}
+                              onClick={(e) => handleBuyNow(e, item)}
+                              className="bg-[#a3f69c] hover:bg-[#85e87d] text-[#00351a] text-[11px] font-bold px-2.5 py-2 rounded-xl shadow-xs hover:shadow transition-colors flex items-center gap-1 cursor-pointer"
+                              title="شراء فوري والانتقال للدفع وتأكيد الشراء"
+                            >
+                              <Zap className="w-3.5 h-3.5 fill-[#00351a]" />
+                              <span>اشتري فوراً</span>
+                            </motion.button>
+                          </div>
                         </div>
                       </div>
                     </motion.div>

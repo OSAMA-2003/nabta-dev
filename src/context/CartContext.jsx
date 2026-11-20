@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { products } from '../data/products';
 
 const CartContext = createContext();
@@ -20,30 +20,109 @@ export function CartProvider({ children }) {
     }, 3000);
   };
 
-  // Cart State (Initialized with 3 items to match Figma initial cart badge "3")
-  const [cartItems, setCartItems] = useState([
-    { product: products[0], quantity: 1 },
-    { product: products[1], quantity: 1 },
-    { product: products[2], quantity: 1 },
-  ]);
+  // Cart State with localStorage persistence
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nabta_cart');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return [
+      { product: products[0], quantity: 1 },
+      { product: products[1], quantity: 1 },
+      { product: products[2], quantity: 1 },
+    ];
+  });
 
-  // Wishlist State (IDs)
-  const [wishlist, setWishlist] = useState(['prod-2', 'prod-4']);
+  // Wishlist State with localStorage persistence
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nabta_wishlist');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return ['prod-2', 'prod-4'];
+  });
 
   // Discount / Coupon Code
   const [coupon, setCoupon] = useState({ code: '', discountPercent: 0 });
 
-  // User State
-  const [user, setUser] = useState({
-    id: 'usr-1',
-    name: 'المهندس أسامة أحمد',
-    email: 'osama.ahmed@example.com',
-    phone: '01029317818',
-    farmName: 'مزرعة الخير الحديثة',
-    region: 'البحيرة - النوبارية',
-    isLoggedIn: true
+  // User State with localStorage persistence
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nabta_user');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return {
+      id: 'usr-1',
+      name: 'المهندس أسامة أحمد',
+      email: 'osama.ahmed@example.com',
+      phone: '01029317818',
+      farmName: 'مزرعة الخير الحديثة',
+      region: 'البحيرة والنوبارية',
+      city: 'النوبارية',
+      areaFeddan: '50',
+      isLoggedIn: true
+    };
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Sync to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('nabta_cart', JSON.stringify(cartItems));
+    } catch {
+      // ignore
+    }
+  }, [cartItems]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('nabta_wishlist', JSON.stringify(wishlist));
+    } catch {
+      // ignore
+    }
+  }, [wishlist]);
+
+  const loginUser = (userData) => {
+    const fullUser = {
+      ...userData,
+      id: userData.id || `usr-${Date.now()}`,
+      isLoggedIn: true
+    };
+    setUser(fullUser);
+    try {
+      localStorage.setItem('nabta_user', JSON.stringify(fullUser));
+    } catch {
+      // ignore
+    }
+    showToast(`مرحباً بك م. ${fullUser.name}! تم تسجيل الدخول وحفظ البيانات بنجاح`);
+  };
+
+  const logoutUser = () => {
+    const guestUser = {
+      id: '',
+      name: 'زائر',
+      email: '',
+      phone: '',
+      farmName: '',
+      region: '',
+      city: '',
+      areaFeddan: '',
+      isLoggedIn: false
+    };
+    setUser(guestUser);
+    try {
+      localStorage.removeItem('nabta_user');
+    } catch {
+      // ignore
+    }
+    showToast('تم تسجيل الخروج بنجاح', 'info');
+  };
 
   // Orders State (Initial past order)
   const [orders, setOrders] = useState([
@@ -239,6 +318,8 @@ export function CartProvider({ children }) {
         placeOrder,
         user,
         setUser,
+        loginUser,
+        logoutUser,
         isAuthModalOpen,
         setIsAuthModalOpen,
         toast,

@@ -11,16 +11,18 @@ import imgSeedlingOlive from './assets/products/seedling-olive.jpg';
 import imgSeedlingDatePalm from './assets/products/seedling-date-palm.jpg';
 import imgSeedlingCitrus from './assets/products/seedling-citrus-orange.jpg';
 import imgSeedlingMango from './assets/products/seedling-mango-keitt.jpg';
+import imgServiceIrrigation from './assets/products/service-irrigation.svg';
+import imgServiceEquipment from './assets/products/service-equipment.svg';
+import imgServiceAgronomist from './assets/products/service-agronomist.svg';
 
 export const categories = [
-  { id: 'all', name: 'جميع المنتجات', count: 64, icon: 'Sprout' },
+  { id: 'all', name: 'جميع المنتجات والخدمات', count: 64, icon: 'Sprout' },
   { id: 'trees', name: 'أشجار وشتلات زراعية', count: 16, icon: 'Trees' },
   { id: 'fertilizers', name: 'أسمدة ومغذيات زراعية', count: 18, icon: 'FlaskConical' },
   { id: 'seeds', name: 'بذور وتقاوي مهجنة', count: 12, icon: 'Wheat' },
   { id: 'protection', name: 'مبيدات ووقاية محاصيل', count: 9, icon: 'ShieldCheck' },
-  { id: 'irrigation', name: 'شبكات وأنظمة ري حديثة', count: 14, icon: 'Droplets' },
   { id: 'greenhouses', name: 'بيوت محمية ومستلزمات', count: 7, icon: 'Warehouse' },
-  { id: 'tools', name: 'معدات وأدوات زراعية', count: 11, icon: 'Tractor' },
+  { id: 'services', name: 'خدمات واستشارات زراعية', count: 9, icon: 'Wrench' },
 ];
 
 export const products = [
@@ -263,6 +265,66 @@ export const products = [
     usage: 'تغرس في خطوط 2×4 أو 3×5 متر للزراعة نصف المكثفة مع دعامة خشبية للحماية من الرياح.',
     image: imgSeedlingMango,
     tags: ['مانجو', 'كيت', 'شتلات', 'أشجار', 'زراعة مكثفة']
+  },
+  {
+    id: 'prod-13',
+    name: 'تصميم وتركيب شبكات الري الحديثة (تنقيط ورشاشات للمزارع)',
+    category: 'services',
+    categoryName: 'خدمات زراعية',
+    price: 1200,
+    originalPrice: 1500,
+    rating: 5.0,
+    reviewsCount: 38,
+    badge: 'خدمة هندسية',
+    inStock: true,
+    sku: 'NAB-SRV-IRRIG',
+    weight: 'حسب مساحة الفدان',
+    origin: 'فريق هندسة الري المعتمد بمصر',
+    composition: 'تصميم هيدروليكي متكامل + توريد مواسير وخراطيم GR + فلاتر ومحابس أوتوماتيكية',
+    description: 'خدمة هندسية متكاملة لتخطيط وتوريد وتنفيذ شبكات الري بالتنقيط والري بالرش المحوري لمزارع النوبارية، وادي النطرون، وطريق مصر إسكندرية الصحراوي، مع ضمان ترشيد 40% من مياه الري.',
+    usage: 'يتم إرسال فريق مساحي للمزرعة لرفع الإحداثيات وتحديد ضغوط المياه واختيار أفضل شبكة مناسبة لنوع التربة والمحصول.',
+    image: imgServiceIrrigation,
+    tags: ['خدمات', 'ري', 'شبكات', 'تنقيط', 'هندسة']
+  },
+  {
+    id: 'prod-14',
+    name: 'تأجير معدات وآلات زراعية ثقيلة (جرارات، لودرات، تسوية ليزر)',
+    category: 'services',
+    categoryName: 'خدمات زراعية',
+    price: 950,
+    originalPrice: 1100,
+    rating: 4.9,
+    reviewsCount: 45,
+    badge: 'تأجير فوري',
+    inStock: true,
+    sku: 'NAB-SRV-EQUIP',
+    weight: 'سعر الوردية / يومي',
+    origin: 'أسطول معدات نبتة الميداني',
+    composition: 'جرارات حديثة بقوة 90-140 حصان + قصابيات ليزر دقيقة + حفارات جور شتلات',
+    description: 'خدمة تأجير المعدات والآلات الثقيلة لتجهيز الأراضي البكر، حرث التربة، تسوية الأرض بالليزر، وحفر جور الشتلات وأشجار الفاكهة مع سائقين ومشغلين محترفين.',
+    usage: 'حجز مسبق عبر المنصة أو الواتساب وتحديد موقع المزرعة لتوجيه الشاحنة الناقلة للمعدة في الموعد المحدد.',
+    image: imgServiceEquipment,
+    tags: ['خدمات', 'تأجير', 'معدات', 'جرارات', 'تسوية ليزر']
+  },
+  {
+    id: 'prod-15',
+    name: 'استشارة وزيارة ميدانية لمهندس زراعي متخصص للمزرعة',
+    category: 'services',
+    categoryName: 'خدمات زراعية',
+    price: 350,
+    originalPrice: 450,
+    rating: 5.0,
+    reviewsCount: 62,
+    badge: 'استشارة معتمدة',
+    inStock: true,
+    sku: 'NAB-SRV-AGRONOMIST',
+    weight: 'زيارة كشف ميداني شامل',
+    origin: 'مهندسون واستشاريون معتمدون - نقابة المهن الزراعية',
+    composition: 'تشخيص الآفات وأعراض نقص التغذية + إعداد جدول تسميد ومكافحة موسمي تفصيلي',
+    description: 'زيارة ميدانية خاصة لمزرعتك من مهندس زراعي خبير في محاصيل الخضار، النخيل، الموالح، أو الفاكهة. فحص حي للمحصول والتربة وتقديم تقرير علاجي ووقائي فوري عبر الواتساب والموقع.',
+    usage: 'تحديد موعد الزيارة وكتابة بيانات الحيازة، مع إمكانية المتابعة المستمرة عبر رسائل الواتساب الدورية.',
+    image: imgServiceAgronomist,
+    tags: ['خدمات', 'استشارة', 'مهندس زراعي', 'زيارة ميدانية', 'وقاية']
   }
 ];
 
